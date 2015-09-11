@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO GoPiGo controller</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; padding-bottom: 30px; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+  <body>
+
+<div>
+  <button id="forward">Forward</button>
+  <button id="backward">Backward</button>
+  <button id="stop">Stop</button>
+  <button id="left">Left</button>
+  <button id="right">Right</button>
+</div>
+    <ul id="messages"></ul>
+    <div>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>SUBMIT</button>
+    </form>
+  </div>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io();
+      $('form').submit(function(){
+        socket.emit('command', $('#m').val());
+        $('#m').val('');
+        return false;
+      });
+      socket.on('status', function(msg){
+        $('#messages').append($('<li>').text(msg));
+      });
+      $('#forward').click(function() {
+        socket.emit('command','move forward');
+      });
+      $('#backward').click(function() {
+        socket.emit('command','move backward');
+      });
+      $('#stop').click(function() {
+        socket.emit('command','stop');
+      });
+      $('#left').click(function() {
+        socket.emit('command','turn left');
+      });
+      $('#right').click(function() {
+        socket.emit('command','turn right');
+      });
+
+
+    </script>
+  </body>
+</html>
